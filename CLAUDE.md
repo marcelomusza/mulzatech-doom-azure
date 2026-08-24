@@ -124,6 +124,9 @@ tool disconnected from the rest of the work.
   where relevant, GitHub repo creation, GitHub Actions, Azure DevOps org/
   project/pipelines) — Claude gives step-by-step navigation/command
   instructions, the user performs the actual clicks/commands themselves.
+- Git: as of the CI phase, the user handles all `git add`/`commit`/`push`
+  themselves. Claude prepares the commit message and tells the user what to
+  run, but does not execute git commit/push commands on their behalf.
 
 ## Current status
 
