@@ -130,16 +130,27 @@ tool disconnected from the rest of the work.
 
 ## Current status
 
-Phases 0, 1, and 2 complete and documented (`docs/phases/`). DOOM is live on
-Azure Container Apps via Terraform (`infra/`), image pulled from public
-Docker Hub (ADR 0004), deployed at:
+Phases 0-3 complete and documented (`docs/phases/`). DOOM is live on Azure
+Container Apps via Terraform (`infra/`), image pulled from public Docker Hub
+(ADR 0004), deployed at:
 https://mulzatech-doom--rdezegm.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
 Left running indefinitely (not destroyed between uses) — relies on Container
 Apps' default scale-to-zero behavior to stay near-$0 while idle, since this
 is a standing portfolio piece with a URL meant to stay stable, not a
-throwaway dev sandbox. Next: Phase 3 — CI in Azure DevOps.
+throwaway dev sandbox.
+
+Repo is live at github.com/marcelomusza/mulzatech-doom-azure (public). CI
+runs in Azure DevOps (`azure-pipelines.yml`): builds, validates by actually
+running + curling the container, and pushes both a `$(Build.BuildId)` tag
+and `latest` to Docker Hub on every push to `main`. No deploy step yet —
+that's Phase 4, and per the Phase 3 doc's tradeoffs section, Phase 4 should
+likely deploy the specific build-ID tag rather than chasing mutable `latest`.
+
+Next: Phase 4 — CD in Azure DevOps (deploy via Terraform to the Phase 2
+environment — the real "it's live via pipeline" milestone).
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,
 GitHub repo/Actions, Azure DevOps), Claude writes/explains, the user
-executes — see "Working conventions" below.
+executes — see "Working conventions" below. Since Phase 3, this also
+includes git commits/pushes.

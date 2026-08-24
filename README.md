@@ -15,14 +15,14 @@ the architecture decisions and per-phase design docs behind each step.
 
 ## Status
 
-**Phase 2 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
+**Phase 3 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
 also tracked in this repo's project context). Each phase ships something
 visibly working before the next one starts:
 
 - [x] Phase 0 — App skeleton: DOOM playable via a plain `docker run`
 - [x] Phase 1 — Clean Dockerfile, `docker compose` for local dev, this README
 - [x] Phase 2 — Terraform: minimum viable Azure environment (see live demo above)
-- [ ] Phase 3 — CI in Azure DevOps
+- [x] Phase 3 — CI in Azure DevOps: builds, validates, and pushes to [Docker Hub](https://hub.docker.com/r/marcelomusza/mulzatech-doom) on every push to `main`
 - [ ] Phase 4 — CD in Azure DevOps (first real "it's live" milestone)
 - [ ] Phase 5 — Observability
 - [ ] Phase 6 — Hardening & best practices
