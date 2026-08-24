@@ -23,6 +23,7 @@ steps:
       buildContext: $(buildContext)
       tags: |
         $(tag)
+        latest
 
   - script: |
       docker run -d --name ci-test -p 8080:80 $(imageRepository):$(tag)
