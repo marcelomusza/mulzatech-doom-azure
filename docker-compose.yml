@@ -1,0 +1,8 @@
+services:
+  doom:
+    build: ./app
+    container_name: mulzatech-doom
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app/public:/usr/share/nginx/html:ro

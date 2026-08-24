@@ -1,0 +1,11 @@
+# Terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfvars
+infra/crash.log
+infra/crash.*.log
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
