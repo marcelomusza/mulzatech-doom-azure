@@ -1,36 +1,78 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 variables:
   imageRepository: 'marcelomusza/mulzatech-doom'
   dockerfilePath: 'app/Dockerfile'
   buildContext: 'app'
   tag: '$(Build.BuildId)'
+  terraformVersion: '1.15.9'
+  terraformWorkingDirectory: 'infra'
 
-steps:
-  - task: Docker@2
-    displayName: Build image
-    inputs:
-      command: build
-      repository: $(imageRepository)
-      dockerfile: $(dockerfilePath)
-      buildContext: $(buildContext)
-      tags: |
-        $(tag)
+stages:
+  - stage: Build
+    displayName: Build, validate, and push image
+    jobs:
+      - job: Build
+        steps:
+          - task: Docker@2
+            displayName: Build image
+            inputs:
+              command: build
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              buildContext: $(buildContext)
+              tags: |
+                $(tag)
 
-  - script: docker tag $(imageRepository):$(tag) $(imageRepository):latest
-    displayName: Tag image as latest
+          - script: docker tag $(imageRepository):$(tag) $(imageRepository):latest
+            displayName: Tag image as latest
 
-  - script: |
-      docker run -d --name ci-test -p 8080:80 $(imageRepository):$(tag)
-      sleep 5
-      curl -f http://localhost:8080/ || exit 1
-      docker rm -f ci-test
-    displayName: Validate container responds
+          - script: |
+              docker run -d --name ci-test -p 8080:80 $(imageRepository):$(tag)
+              sleep 5
+              curl -f http://localhost:8080/ || exit 1
+              docker rm -f ci-test
+            displayName: Validate container responds
 
-  - task: Docker@2
-    displayName: Push image
-    inputs:
-      command: push
-      containerRegistry: 'dockerhub-mulzatech'
-      repository: $(imageRepository)
-      tags: |
-        $(tag)
-        latest
+          - task: Docker@2
+            displayName: Push image
+            inputs:
+              command: push
+              containerRegistry: 'dockerhub-mulzatech'
+              repository: $(imageRepository)
+              tags: |
+                $(tag)
+                latest
+
+  - stage: Deploy
+    displayName: Deploy via Terraform
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: Deploy
+        steps:
+          - task: AzureCLI@2
+            displayName: Terraform apply
+            inputs:
+              azureSubscription: 'azure-mulzatech-doom'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -e
+                curl -fsSL -o terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
+                unzip -o terraform.zip
+
+                ./terraform -chdir=$(terraformWorkingDirectory) init
+                ./terraform -chdir=$(terraformWorkingDirectory) apply -auto-approve \
+                  -var="container_image=docker.io/$(imageRepository):$(tag)"
+
+                APP_URL=$(./terraform -chdir=$(terraformWorkingDirectory) output -raw app_url)
+                echo "Deployed to: $APP_URL"
+                sleep 10
+                curl -f "$APP_URL" || exit 1
