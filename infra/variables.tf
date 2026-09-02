@@ -15,3 +15,9 @@ variable "container_image" {
   type        = string
   default     = "docker.io/marcelomusza/mulzatech-doom:latest"
 }
+
+variable "admin_object_id" {
+  description = "Azure AD object ID of the Key Vault administrator"
+  type        = string
+  default     = "2a7fb68c-a32f-4396-a19e-bfa3ca4cd32e"
+}
