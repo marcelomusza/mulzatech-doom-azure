@@ -5,7 +5,7 @@ the original DOOM (1993) shareware episode, running entirely client-side in
 the browser via a WebAssembly DOS emulator ([js-dos](https://js-dos.com/)) —
 no game server, no VNC/streaming backend, just a static file server.
 
-**Live demo:** https://mulzatech-doom--rdezegm.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
+**Live demo:** https://mulzatech-doom.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
 
 **The app is intentionally simple. The point of the project is everything
 around it:** containerization, Infrastructure as Code, CI/CD, cloud
@@ -15,7 +15,7 @@ the architecture decisions and per-phase design docs behind each step.
 
 ## Status
 
-**Phase 3 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
+**Phase 4 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
 also tracked in this repo's project context). Each phase ships something
 visibly working before the next one starts:
 
@@ -23,6 +23,7 @@ visibly working before the next one starts:
 - [x] Phase 1 — Clean Dockerfile, `docker compose` for local dev, this README
 - [x] Phase 2 — Terraform: minimum viable Azure environment (see live demo above)
 - [x] Phase 3 — CI in Azure DevOps: builds, validates, and pushes to [Docker Hub](https://hub.docker.com/r/marcelomusza/mulzatech-doom) on every push to `main`
+- [x] Phase 4 — CD in Azure DevOps: every push to `main` builds, validates, pushes, then deploys via Terraform automatically
 - [ ] Phase 4 — CD in Azure DevOps (first real "it's live" milestone)
 - [ ] Phase 5 — Observability
 - [ ] Phase 6 — Hardening & best practices

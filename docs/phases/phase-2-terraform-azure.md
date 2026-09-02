@@ -27,10 +27,18 @@ Deployed resources, in the order Terraform creates them:
 | `azurerm_key_vault` | Provisioned now with RBAC authorization, even though nothing needs a secret yet — a deliberate "learn the resource before you're under pressure to use it" choice (see Phase 2 discussion in chat / this doc's tradeoffs section). |
 | `azurerm_role_assignment` | Grants the deploying user (via `data.azurerm_client_config`) the *Key Vault Administrator* role — without this, RBAC mode means nobody has access by default, not even the creator. |
 
-**Result:** https://mulzatech-doom--rdezegm.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
-— live, publicly reachable, serving the exact same image that was verified
-locally in Phase 0/1, headers and all (`Cross-Origin-Opener-Policy` /
-`Cross-Origin-Embedder-Policy` confirmed present in production responses).
+**Result:** live and publicly reachable at
+`https://mulzatech-doom.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io`,
+serving the exact same image that was verified locally in Phase 0/1,
+headers and all (`Cross-Origin-Opener-Policy` / `Cross-Origin-Embedder-Policy`
+confirmed present in production responses).
+
+> **Correction (found in Phase 4):** `outputs.tf` originally read
+> `latest_revision_fqdn` here, which produced a *revision-specific* URL
+> (with an extra `--<suffix>` segment) rather than the stable app-level one
+> shown above. It broke the first time CD deployed a new revision. See
+> [phase-4-cd-azure-devops.md](phase-4-cd-azure-devops.md) for the fix and
+> why it happened.
 
 ## A key design question: registry choice
 

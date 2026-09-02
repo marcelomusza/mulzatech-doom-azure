@@ -130,24 +130,26 @@ tool disconnected from the rest of the work.
 
 ## Current status
 
-Phases 0-3 complete and documented (`docs/phases/`). DOOM is live on Azure
-Container Apps via Terraform (`infra/`), image pulled from public Docker Hub
-(ADR 0004), deployed at:
-https://mulzatech-doom--rdezegm.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
-Left running indefinitely (not destroyed between uses) — relies on Container
-Apps' default scale-to-zero behavior to stay near-$0 while idle, since this
-is a standing portfolio piece with a URL meant to stay stable, not a
-throwaway dev sandbox.
+Phases 0-4 complete and documented (`docs/phases/`). Full pipeline works
+end-to-end: a push to `main` builds the image, validates it by actually
+running + curling the container, pushes to Docker Hub (both a
+`$(Build.BuildId)` tag and `latest`), then deploys the exact build-ID
+tag to Azure Container Apps via `terraform apply` — no manual steps.
 
-Repo is live at github.com/marcelomusza/mulzatech-doom-azure (public). CI
-runs in Azure DevOps (`azure-pipelines.yml`): builds, validates by actually
-running + curling the container, and pushes both a `$(Build.BuildId)` tag
-and `latest` to Docker Hub on every push to `main`. No deploy step yet —
-that's Phase 4, and per the Phase 3 doc's tradeoffs section, Phase 4 should
-likely deploy the specific build-ID tag rather than chasing mutable `latest`.
+Live at: https://mulzatech-doom.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
+(the stable app-level URL — see Phase 4 doc for why an earlier version of
+this URL, using `latest_revision_fqdn`, broke on the first CD deploy).
+Left running indefinitely (not destroyed between uses) — relies on
+Container Apps' default scale-to-zero behavior to stay near-$0 while idle,
+since this is a standing portfolio piece with a URL meant to stay stable.
 
-Next: Phase 4 — CD in Azure DevOps (deploy via Terraform to the Phase 2
-environment — the real "it's live via pipeline" milestone).
+Repo: github.com/marcelomusza/mulzatech-doom-azure (public). Terraform
+state is remote (Azure Storage Account `mulzatechtfstate`, container
+`tfstate`, AzureAD-authenticated) — required once CD needed a pipeline
+agent (not just the user's laptop) to run `terraform apply`.
+
+Next: Phase 5 — Observability (Prometheus/Grafana or Azure Monitor +
+Application Insights — decide which when this phase starts).
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,
