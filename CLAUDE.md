@@ -130,11 +130,23 @@ tool disconnected from the rest of the work.
 
 ## Current status
 
-Phases 0-4 complete and documented (`docs/phases/`). Full pipeline works
+Phases 0-5 complete and documented (`docs/phases/`). Full pipeline works
 end-to-end: a push to `main` builds the image, validates it by actually
 running + curling the container, pushes to Docker Hub (both a
 `$(Build.BuildId)` tag and `latest`), then deploys the exact build-ID
 tag to Azure Container Apps via `terraform apply` — no manual steps.
+Observability (Phase 5) is live and verified: logs/metrics flowing into
+Log Analytics (`mulzatech-doom-logs`), a `RestartCount`-based alert wired
+to an email action group, both confirmed working end-to-end (real log data
+queried directly, a real test notification delivered).
+
+Known footgun for future local (non-CD) `terraform apply` runs: always
+pass `-var="container_image=..."` pointing at whatever's actually
+currently deployed, or route the change through CD instead — the default
+in variables.tf is still `:latest`, and a plain local apply with no
+override will revert the live image to it. Hit this exact near-miss in
+Phase 5 (see its design doc), caught by reviewing `terraform plan` before
+applying rather than after.
 
 Live at: https://mulzatech-doom.gentlesmoke-5d69cfd2.eastus.azurecontainerapps.io
 (the stable app-level URL — see Phase 4 doc for why an earlier version of
@@ -148,8 +160,8 @@ state is remote (Azure Storage Account `mulzatechtfstate`, container
 `tfstate`, AzureAD-authenticated) — required once CD needed a pipeline
 agent (not just the user's laptop) to run `terraform apply`.
 
-Next: Phase 5 — Observability (Prometheus/Grafana or Azure Monitor +
-Application Insights — decide which when this phase starts).
+Next: Phase 6 — Hardening & best practices (RBAC, network security rules,
+resource tagging, secret rotation patterns).
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,
