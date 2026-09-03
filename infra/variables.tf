@@ -21,3 +21,9 @@ variable "admin_object_id" {
   type        = string
   default     = "2a7fb68c-a32f-4396-a19e-bfa3ca4cd32e"
 }
+
+variable "alert_email" {
+  description = "Email address that receives observability alerts"
+  type        = string
+  default     = "marcelomusza@gmail.com"
+}
