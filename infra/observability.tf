@@ -6,9 +6,9 @@ resource "azurerm_log_analytics_workspace" "main" {
   retention_in_days   = 30
 }
 
-resource "azurerm_monitor_diagnostic_setting" "container_app" {
-  name                       = "${var.project_name}-diagnostics"
-  target_resource_id         = azurerm_container_app.main.id
+resource "azurerm_monitor_diagnostic_setting" "environment_logs" {
+  name                       = "${var.project_name}-env-diagnostics"
+  target_resource_id         = azurerm_container_app_environment.main.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
 
   enabled_log {
@@ -18,6 +18,12 @@ resource "azurerm_monitor_diagnostic_setting" "container_app" {
   enabled_log {
     category = "ContainerAppSystemLogs"
   }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "container_app_metrics" {
+  name                       = "${var.project_name}-app-diagnostics"
+  target_resource_id         = azurerm_container_app.main.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
 
   enabled_metric {
     category = "AllMetrics"
