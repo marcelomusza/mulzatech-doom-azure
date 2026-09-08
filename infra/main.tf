@@ -1,21 +1,24 @@
 resource "azurerm_resource_group" "main" {
   name     = "${var.project_name}-rg"
   location = var.location
+  tags     = local.common_tags
 }
 
 resource "azurerm_container_app_environment" "main" {
-  name                = "${var.project_name}-env"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  name                       = "${var.project_name}-env"
+  location                   = azurerm_resource_group.main.location
+  resource_group_name        = azurerm_resource_group.main.name
   logs_destination           = "log-analytics"
   log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
+  tags                       = local.common_tags
 }
 
 resource "azurerm_container_app" "main" {
   name                         = var.project_name
   container_app_environment_id = azurerm_container_app_environment.main.id
-  resource_group_name           = azurerm_resource_group.main.name
-  revision_mode                  = "Single"
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Single"
+  tags                         = local.common_tags
 
   template {
     container {

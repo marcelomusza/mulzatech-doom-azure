@@ -4,6 +4,7 @@ resource "azurerm_log_analytics_workspace" "main" {
   resource_group_name = azurerm_resource_group.main.name
   sku                 = "PerGB2018"
   retention_in_days   = 30
+  tags                = local.common_tags
 }
 
 resource "azurerm_monitor_diagnostic_setting" "environment_logs" {
@@ -34,6 +35,7 @@ resource "azurerm_monitor_action_group" "main" {
   name                = "${var.project_name}-alerts"
   resource_group_name = azurerm_resource_group.main.name
   short_name          = "doomalerts"
+  tags                = local.common_tags
 
   email_receiver {
     name          = "owner"
