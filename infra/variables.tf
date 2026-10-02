@@ -27,3 +27,9 @@ variable "alert_email" {
   type        = string
   default     = "marcelomusza@gmail.com"
 }
+
+variable "cd_service_principal_object_id" {
+  description = "Object ID of the CD pipeline's service principal, granted read-only access to Key Vault secrets"
+  type        = string
+  default     = "f9d2e567-6784-4d1e-b08a-b3885e3d4d08"
+}

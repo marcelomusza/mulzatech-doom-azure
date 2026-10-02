@@ -18,3 +18,9 @@ resource "azurerm_role_assignment" "kv_admin" {
   role_definition_name = "Key Vault Administrator"
   principal_id          = var.admin_object_id
 }
+
+resource "azurerm_role_assignment" "kv_cd_secrets_reader" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = var.cd_service_principal_object_id
+}
