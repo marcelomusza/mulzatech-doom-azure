@@ -40,15 +40,22 @@ stages:
               docker rm -f ci-test
             displayName: Validate container responds
 
-          - task: Docker@2
-            displayName: Push image
+          - task: AzureKeyVault@2
+            displayName: Fetch Docker Hub token from Key Vault
             inputs:
-              command: push
-              containerRegistry: 'dockerhub-mulzatech'
-              repository: $(imageRepository)
-              tags: |
-                $(tag)
-                latest
+              azureSubscription: 'azure-mulzatech-doom'
+              KeyVaultName: 'mulzatech-doom-kvb2038d'
+              SecretsFilter: 'dockerhub-token'
+              RunAsPreJob: false
+
+          - script: |
+              echo "$DOCKERHUB_TOKEN" | docker login -u marcelomusza --password-stdin
+              docker push $(imageRepository):$(tag)
+              docker push $(imageRepository):latest
+              docker logout
+            displayName: Push image
+            env:
+              DOCKERHUB_TOKEN: $(dockerhub-token)
 
   - stage: Deploy
     displayName: Deploy via Terraform
