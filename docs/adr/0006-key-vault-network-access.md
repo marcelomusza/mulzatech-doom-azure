@@ -39,12 +39,12 @@ Leave Key Vault's network access at its default (public), and rely on
   would mean standing up networking infrastructure whose only purpose is
   routing around a restriction we chose to add ourselves — solving a
   self-inflicted problem with disproportionate new complexity.
-- **RBAC is already doing real, meaningful access control.** Per
-  [ADR 0006's context] and the Phase 6 RBAC scope-down, exactly two
-  identities can do anything with this vault: the project owner (Key
-  Vault Administrator, scoped to just this vault) and the CD service
-  principal (scoped to just `mulzatech-doom-rg`, with no
-  `roleAssignments/*` permissions at all). Nobody else — regardless of
+- **RBAC is already doing real, meaningful access control.** After
+  the Phase 6 RBAC scope-down, exactly two identities can do anything
+  with this vault: the project owner (Key Vault Administrator, scoped to
+  just this vault) and the CD service principal (Contributor on
+  `mulzatech-doom-rg` only, plus read-only `Key Vault Secrets User` on
+  this vault, with no `roleAssignments/*` permissions at all). Nobody else — regardless of
   what network they're calling from — has a valid Azure AD identity that
   RBAC would authorize.
 

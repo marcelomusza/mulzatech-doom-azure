@@ -130,7 +130,7 @@ tool disconnected from the rest of the work.
 
 ## Current status
 
-Phases 0-5 complete and documented (`docs/phases/`). Full pipeline works
+Phases 0-6 complete and documented (`docs/phases/`). Full pipeline works
 end-to-end: a push to `main` builds the image, validates it by actually
 running + curling the container, pushes to Docker Hub (both a
 `$(Build.BuildId)` tag and `latest`), then deploys the exact build-ID
@@ -160,8 +160,22 @@ state is remote (Azure Storage Account `mulzatechtfstate`, container
 `tfstate`, AzureAD-authenticated) — required once CD needed a pipeline
 agent (not just the user's laptop) to run `terraform apply`.
 
-Next: Phase 6 — Hardening & best practices (RBAC, network security rules,
-resource tagging, secret rotation patterns).
+Hardening (Phase 6) state: the CD service principal is least-privilege
+(Contributor on `mulzatech-doom-rg` only, Storage Blob Data Contributor on
+the state account only, Key Vault Secrets User on the vault only). The
+Docker Hub token lives in Key Vault (`dockerhub-token`) and the pipeline
+fetches it at runtime; the old Azure DevOps Docker Hub service connection
+was deleted. Standing principle: **privilege grants (role assignments) are
+done by a human, never by the pipeline** — Contributor can't write role
+assignments, and we deliberately don't give CD that ability. The Key Vault
+Secrets User assignment for the CD service principal was created by hand in
+the Portal and is intentionally NOT in Terraform (documented exception in
+the Phase 6 doc). Key Vault network access is intentionally left public,
+RBAC-only (ADR 0006).
+
+Next: Phase 7 — Multi-environment (optional; only if it adds value) or
+Phase 8 — the separate AI-layer repos. Revisit whether Phase 7 is worth
+doing before starting it.
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,

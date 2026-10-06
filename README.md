@@ -15,7 +15,7 @@ the architecture decisions and per-phase design docs behind each step.
 
 ## Status
 
-**Phase 5 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
+**Phase 6 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
 also tracked in this repo's project context). Each phase ships something
 visibly working before the next one starts:
 
@@ -25,6 +25,7 @@ visibly working before the next one starts:
 - [x] Phase 3 — CI in Azure DevOps: builds, validates, and pushes to [Docker Hub](https://hub.docker.com/r/marcelomusza/mulzatech-doom) on every push to `main`
 - [x] Phase 4 — CD in Azure DevOps: every push to `main` builds, validates, pushes, then deploys via Terraform automatically
 - [x] Phase 5 — Observability: logs and metrics flowing to Azure Monitor/Log Analytics, with an email alert on container restarts
+- [x] Phase 6 — Hardening: least-privilege RBAC for CD, consistent resource tagging, and the Docker Hub token sourced from Key Vault
 - [ ] Phase 4 — CD in Azure DevOps (first real "it's live" milestone)
 - [ ] Phase 5 — Observability
 - [ ] Phase 6 — Hardening & best practices
