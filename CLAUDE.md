@@ -173,9 +173,22 @@ the Portal and is intentionally NOT in Terraform (documented exception in
 the Phase 6 doc). Key Vault network access is intentionally left public,
 RBAC-only (ADR 0006).
 
-Next: Phase 7 — Multi-environment (optional; only if it adds value) or
-Phase 8 — the separate AI-layer repos. Revisit whether Phase 7 is worth
-doing before starting it.
+Phase 7 (multi-environment) was deliberately SKIPPED: for a single static
+site it would mostly duplicate infrastructure and cost without teaching
+anything new. Phase 8 is the final phase.
+
+Phase 8 (in progress): a separate repo, `mulzatech-infra-reviewer`
+(sibling folder at `C:\Users\Marcelo\source\repos\mulzatech\`), containing
+an AI infra-change reviewer that runs as a GitHub Actions workflow. On pull
+requests to this repo it reviews the diff (Terraform, pipeline YAML,
+Dockerfile, nginx config) with the Anthropic API and posts a PR comment
+flagging risky changes — image rollbacks to `:latest`, role/permission
+changes (esp. grants made by the pipeline), public exposure, secrets
+handling. The review rubric is derived from real problems in this
+project's phase docs. It must be read-only (comment only) and treat PR
+content as untrusted data (prompt-injection awareness). Requires an
+Anthropic API key (user-created, spend-limited, stored as a GitHub secret —
+never pasted to Claude). This repo's own CI/CD stays on Azure DevOps.
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,

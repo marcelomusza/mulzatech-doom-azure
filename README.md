@@ -26,11 +26,8 @@ visibly working before the next one starts:
 - [x] Phase 4 — CD in Azure DevOps: every push to `main` builds, validates, pushes, then deploys via Terraform automatically
 - [x] Phase 5 — Observability: logs and metrics flowing to Azure Monitor/Log Analytics, with an email alert on container restarts
 - [x] Phase 6 — Hardening: least-privilege RBAC for CD, consistent resource tagging, and the Docker Hub token sourced from Key Vault
-- [ ] Phase 4 — CD in Azure DevOps (first real "it's live" milestone)
-- [ ] Phase 5 — Observability
-- [ ] Phase 6 — Hardening & best practices
-- [ ] Phase 7 — Multi-environment (optional)
-- [ ] Phase 8 — AI layer connects in (separate repo)
+- [x] ~~Phase 7 — Multi-environment~~ — skipped on purpose: for a single static site it would mostly duplicate infrastructure and cost
+- [ ] Phase 8 — AI layer connects in: an infra-change reviewer in a separate repo (in progress)
 
 ## Running it locally
 
@@ -76,6 +73,8 @@ mulzatech-doom-azure/
       js-dos/            # self-hosted js-dos v8 runtime (JS + WASM)
       doom.jsdos          # DOOM1.WAD + doom.exe + dosbox.conf, zipped
   docker-compose.yml   # local dev convenience only — not used in production
+  azure-pipelines.yml  # CI/CD: build, validate, push, then deploy via Terraform
+  infra/               # Terraform: Container Apps, Key Vault, monitoring, remote state backend
   docs/
     adr/                # Architecture Decision Records
     phases/              # per-phase design docs (what was built, tradeoffs)
