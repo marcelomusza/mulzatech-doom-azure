@@ -15,9 +15,9 @@ the architecture decisions and per-phase design docs behind each step.
 
 ## Status
 
-**Phase 6 of 8** — see the full roadmap in [`docs/`](docs/) (or ask; it's
-also tracked in this repo's project context). Each phase ships something
-visibly working before the next one starts:
+**All phases complete** (Phase 7 skipped on purpose) — see the design docs
+in [`docs/`](docs/). Each phase shipped something visibly working before the
+next one started:
 
 - [x] Phase 0 — App skeleton: DOOM playable via a plain `docker run`
 - [x] Phase 1 — Clean Dockerfile, `docker compose` for local dev, this README
@@ -27,7 +27,7 @@ visibly working before the next one starts:
 - [x] Phase 5 — Observability: logs and metrics flowing to Azure Monitor/Log Analytics, with an email alert on container restarts
 - [x] Phase 6 — Hardening: least-privilege RBAC for CD, consistent resource tagging, and the Docker Hub token sourced from Key Vault
 - [x] ~~Phase 7 — Multi-environment~~ — skipped on purpose: for a single static site it would mostly duplicate infrastructure and cost
-- [ ] Phase 8 — AI layer connects in: an infra-change reviewer in a separate repo (in progress)
+- [x] Phase 8 — AI layer: an infra-change reviewer in a [separate repo](https://github.com/marcelomusza/mulzatech-infra-reviewer) comments on pull requests that touch infrastructure files (advisory, read-only, roughly a tenth of a cent per review)
 
 ## Running it locally
 
@@ -74,6 +74,7 @@ mulzatech-doom-azure/
       doom.jsdos          # DOOM1.WAD + doom.exe + dosbox.conf, zipped
   docker-compose.yml   # local dev convenience only — not used in production
   azure-pipelines.yml  # CI/CD: build, validate, push, then deploy via Terraform
+  .github/workflows/   # calls the AI infra reviewer on pull requests (Phase 8)
   infra/               # Terraform: Container Apps, Key Vault, monitoring, remote state backend
   docs/
     adr/                # Architecture Decision Records

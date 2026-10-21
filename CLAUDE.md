@@ -130,7 +130,7 @@ tool disconnected from the rest of the work.
 
 ## Current status
 
-Phases 0-6 complete and documented (`docs/phases/`). Full pipeline works
+Phases 0-6 and 8 complete and documented (`docs/phases/`; Phase 7 skipped). Full pipeline works
 end-to-end: a push to `main` builds the image, validates it by actually
 running + curling the container, pushes to Docker Hub (both a
 `$(Build.BuildId)` tag and `latest`), then deploys the exact build-ID
@@ -177,18 +177,21 @@ Phase 7 (multi-environment) was deliberately SKIPPED: for a single static
 site it would mostly duplicate infrastructure and cost without teaching
 anything new. Phase 8 is the final phase.
 
-Phase 8 (in progress): a separate repo, `mulzatech-infra-reviewer`
-(sibling folder at `C:\Users\Marcelo\source\repos\mulzatech\`), containing
-an AI infra-change reviewer that runs as a GitHub Actions workflow. On pull
-requests to this repo it reviews the diff (Terraform, pipeline YAML,
-Dockerfile, nginx config) with the Anthropic API and posts a PR comment
-flagging risky changes — image rollbacks to `:latest`, role/permission
-changes (esp. grants made by the pipeline), public exposure, secrets
-handling. The review rubric is derived from real problems in this
-project's phase docs. It must be read-only (comment only) and treat PR
-content as untrusted data (prompt-injection awareness). Requires an
-Anthropic API key (user-created, spend-limited, stored as a GitHub secret —
-never pasted to Claude). This repo's own CI/CD stays on Azure DevOps.
+Phase 8 (complete, final phase): a separate repo, `mulzatech-infra-reviewer`
+(github.com/marcelomusza/mulzatech-infra-reviewer, sibling folder at
+`C:\Users\Marcelo\source\repos\mulzatech\`), containing an AI infra-change
+reviewer. This repo has a small caller workflow
+(`.github/workflows/infra-review.yml`) that, on pull requests touching
+`infra/**`, `azure-pipelines.yml`, `app/Dockerfile` or `app/nginx.conf`,
+calls the reviewer's reusable workflow. It reviews the diff with
+`claude-haiku-5-5` against a rubric of this project's real past mistakes
+and posts one advisory PR comment, edited in place on later pushes.
+Read-only, diff-only (no `terraform plan`, no Azure credentials), and PR
+content is treated as untrusted data. The Anthropic API key is a
+spend-limited GitHub Actions secret (`ANTHROPIC_API_KEY`), never pasted
+to Claude. Verified end to end on a real throwaway PR. See
+`docs/phases/phase-8-ai-infra-reviewer.md` and ADR 0007. This repo's own
+CI/CD stays on Azure DevOps.
 
 Working convention in effect since Phase 2: for anything that provisions or
 configures real infrastructure/accounts (Terraform apply, Azure resources,
