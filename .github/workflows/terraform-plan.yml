@@ -16,9 +16,9 @@ jobs:
   plan:
     # Pin by full commit SHA: this code runs with an Azure login, so an update
     # should be a deliberate edit here, never a surprise. Keep both SHAs equal.
-    uses: marcelomusza/mulzatech-terraform-planner/.github/workflows/plan.yml@5b30bca9e47a2a5dd466e29a5f0c50d297d59163
+    uses: marcelomusza/mulzatech-terraform-planner/.github/workflows/plan.yml@276433706308d41fc7520333e61e2812d31e6ad1
     with:
-      planner-ref: 5b30bca9e47a2a5dd466e29a5f0c50d297d59163
+      planner-ref: 276433706308d41fc7520333e61e2812d31e6ad1
       terraform-version: "1.15.9"
       working-directory: infra
       container-app-name: mulzatech-doom
