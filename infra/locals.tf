@@ -3,6 +3,6 @@ locals {
     project     = var.project_name
     managed_by  = "terraform"
     environment = "production"
-    owner       = "marcelomusza"
+    owner       = "marcelomusza-test"
   }
 }
