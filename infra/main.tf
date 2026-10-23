@@ -21,6 +21,7 @@ resource "azurerm_container_app" "main" {
   tags                         = local.common_tags
 
   template {
+    min_replicas = 1
     container {
       name   = "doom"
       image  = var.container_image
