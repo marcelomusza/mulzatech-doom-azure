@@ -1,0 +1,31 @@
+name: Terraform plan
+
+on:
+  pull_request:
+    paths:
+      - 'infra/**'
+
+# id-token: write lets the job request a short-lived Azure login via OIDC.
+# The Azure identity behind it has Reader only, so it cannot apply anything.
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  plan:
+    # Pin by full commit SHA: this code runs with an Azure login, so an update
+    # should be a deliberate edit here, never a surprise. Keep both SHAs equal.
+    uses: marcelomusza/mulzatech-terraform-planner/.github/workflows/plan.yml@5b30bca9e47a2a5dd466e29a5f0c50d297d59163
+    with:
+      planner-ref: 5b30bca9e47a2a5dd466e29a5f0c50d297d59163
+      terraform-version: "1.15.9"
+      working-directory: infra
+      container-app-name: mulzatech-doom
+      resource-group: mulzatech-doom-rg
+      image-variable: container_image
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
